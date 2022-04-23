@@ -6,7 +6,8 @@ const  cors = require('cors');
 require('dotenv').config();
 
 
-const { dbConnection } = require('./database/config')
+const { dbConnection } = require('./database/config');
+const { populate } = require('./models/Usuario.Model');
 
 // Crear el servidor de express
 const app = express();
@@ -19,6 +20,8 @@ app.use( express.json() );
 
 // Base de datos
 dbConnection();
+
+app.use( express.static('public') )
 
 // rutas 
 app.use( '/api', require('./routes/index'));

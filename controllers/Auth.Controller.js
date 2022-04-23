@@ -3,6 +3,7 @@ const { response } = require('express');
 const Usuario      = require('../models/Usuario.Model');
 const bcrypt       = require('bcryptjs');
 const { generarJWT } = require('../helpers/Jwt');
+const { googleVerify } = require('../helpers/google-verify');
 
 const controlador = {};
 
@@ -48,6 +49,51 @@ controlador.login = async ( req, res = responce ) => {
             msg  :  'Error inesperado'
         })
     }
+}
+
+controlador.googleSignIn = async ( req, res = responce ) => {
+    
+        const googleToken = req.body.token; 
+
+        try {
+
+            const { email, name, picture } =  await googleVerify( googleToken );
+
+            let usuario;
+            const usuarioDB = await Usuario.findOne({ email });
+
+            if ( !usuarioDB ) {
+                usuario = new Usuario({
+                    email   : email,
+                    nombre  : name,
+                    img     : picture,
+                    password: '@@@',
+                    google  : true
+                });
+            } else {
+                usuario = usuarioDB;
+                usuario.google = true
+               // usuario.password = '@@@@@'  
+            }
+
+            await usuario.save();
+            const token = await generarJWT( usuario.id );
+
+            res.status( 200 ).json({
+                ok   :  true,
+               token
+            })
+         
+        } catch (error) {
+            console.log( error );
+            res.status( 401 ).json({
+                ok   :  false,
+                msg  :  'token invalido'
+            })
+        }
+  
+       
+    
 }
 
 module.exports = controlador;
