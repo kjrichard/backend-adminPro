@@ -96,4 +96,29 @@ controlador.googleSignIn = async ( req, res = responce ) => {
     
 }
 
+controlador.renewToken = async ( req, res = responce ) => {
+    
+  
+    try {
+
+        const uid = req.uid;
+        const token = await generarJWT( uid );
+        
+        res.status( 200 ).json({
+            ok   :  true,
+            uid
+        })
+
+
+        
+        
+    } catch (error) {
+        console.log( error );
+        return res.status( 500 ).json({
+            ok   :  false,
+            msg  :  'Error inesperado'
+        })
+    }
+}
+
 module.exports = controlador;

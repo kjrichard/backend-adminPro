@@ -65,7 +65,7 @@ controller.create = async ( req, res ) => {
 
         res.json({
             ok: true,
-            usuarioActualizado
+            medicoActualizado
         })
     } catch (error) {
         console.log( error );
@@ -93,11 +93,11 @@ controller.create = async ( req, res ) => {
             });
         }
 
-        await Usuario.findByIdAndDelete( uid );
+        await Medico.findByIdAndDelete( uid );
 
         res.json({
             ok   :  false,
-            msg  :  'Useario eliminado'
+            msg  :  'Medico eliminado'
         })
         
     } catch (error) {

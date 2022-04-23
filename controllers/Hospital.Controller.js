@@ -46,16 +46,23 @@ controller.create = async ( req, res ) => {
 
         const uid = req.params.id;
 
-        const hospitalDB = Hospital.findById( uid );
+        const hospitalDB = await Hospital.findById( uid );
         
         if ( !hospitalDB ) {
             return res.status( 404 ).json({
                 ok  :  false,
-                mesg:  'No existe el hospital',
+                mesg:  'No existe el hospital'
+                
             });
         }
 
-        const hospitalActualizado = await Hospital.findByIdAndUpdate( uid, ...req.body, { new: true } );
+        const hospitalActualizado = {
+            ...req.body,
+            usuario: req.uid
+        }
+
+        const update = await Hospital.findByIdAndUpdate( uid, hospitalActualizado, { new: true });
+       
 
         res.json({
             ok: true,
@@ -90,7 +97,7 @@ controller.create = async ( req, res ) => {
         await Hospital.findByIdAndDelete( uid );
 
         res.json({
-            ok   :  false,
+            ok   :  true,
             msg  :  'Hospital eliminado'
         })
         
