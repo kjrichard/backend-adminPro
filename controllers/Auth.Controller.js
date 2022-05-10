@@ -106,7 +106,8 @@ controlador.renewToken = async ( req, res = responce ) => {
         
         res.status( 200 ).json({
             ok   :  true,
-            uid
+            uid,
+            token
         })
 
 
@@ -117,6 +118,7 @@ controlador.renewToken = async ( req, res = responce ) => {
         return res.status( 500 ).json({
             ok   :  false,
             msg  :  'Error inesperado'
+            
         })
     }
 }
